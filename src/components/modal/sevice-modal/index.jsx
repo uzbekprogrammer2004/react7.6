@@ -4,8 +4,8 @@ import Modal from "@mui/material/Modal";
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { ServiceValidationSchema } from "../../utils/validation";
-import service from "../../service/service";
+import { ServiceValidationSchema } from "../../../utils/validation";
+import service from "../../../service/service";
 
 
 const style = {
