@@ -1,4 +1,4 @@
-import AddService from "../../components/modal/service-modal";
+import AddService from "../../components/modal/sevice-modal";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
