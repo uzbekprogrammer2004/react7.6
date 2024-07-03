@@ -79,6 +79,7 @@ const Index = () => {
               <StyledTableCell>T/R</StyledTableCell>
               <StyledTableCell>Name</StyledTableCell>
               <StyledTableCell align="right">Price</StyledTableCell>
+              <StyledTableCell align="right">Edit</StyledTableCell>
               <StyledTableCell align="right">Delete</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -94,10 +95,14 @@ const Index = () => {
                   {`${row.price} UZS`}
                   </StyledTableCell>
                   <StyledTableCell align="right">
+                  <button onClick={()=>editItem(row.id)}>
+                    <EditIcon color="error"/>
+                    </button>
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
                     <button onClick={()=>deleteItem(row.id)}>
                     <DeleteIcon color="error"/>
                     </button>
-                    
                   </StyledTableCell>
                 </StyledTableRow>
               ))}

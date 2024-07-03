@@ -25,16 +25,18 @@ const style = {
 export default function AddService() {
   const initialValues = {
     name: "",
-    price: 0,
+    price: "",
   };
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const handleSubmit = async (values) => {
+    if (item) {
+      const payload = {id: item.id, ...values}
+    }
     try {
-      const responce = await service.add(values);
+      const responce = await service.update(values);
       if(responce.status === 201){
         window.location.reload()
       }
