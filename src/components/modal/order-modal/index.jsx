@@ -7,7 +7,7 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { OrderValidationSchema } from "../../../utils/validation";
 import order from "../../../service/order";
 import service from "../../../service/service";
-
+import { useMask } from "@react-input/mask";
 const style = {
   position: "absolute",
   top: "50%",
@@ -29,7 +29,10 @@ export default function AddOrder({ open, handleClose }) {
     client_phone_number: "+998",
     service_id: "",
   };
-
+  const inputRef = useMask({
+    mask: "+998 (__) ___-__-__",
+    replacement: { _: /\d/ },
+  });
   const [data, setData] = useState([]);
   const getData = async () => {
     try {
@@ -120,11 +123,12 @@ export default function AddOrder({ open, handleClose }) {
               />
               <Field
                 name="client_phone_number"
-                type="text"
+                type="tel"
                 as={TextField}
-                label="Telefon raqami"
+                label="Phone number"
                 fullWidth
                 margin="normal"
+                // inputRef={inputRef}
                 variant="outlined"
                 helperText={
                   <ErrorMessage

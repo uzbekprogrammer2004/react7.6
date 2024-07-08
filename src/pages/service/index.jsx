@@ -1,3 +1,4 @@
+import Pagination from '@mui/material/Pagination';
 import AddService from "../../components/modal/sevice-modal";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -33,12 +34,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Index = () => {
+  const [count, setCount] = useState(0); 
+  const [params, setParams] = useState({
+    limit: 3,
+    page: 1
+  });
   const [services, setServices] = useState([]);
   const getService = async () => {
     try {
-      const response = await service.get();
+      const response = await service.get(params);
       if (response.status === 200 && response?.data?.services) {
         setServices(response.data.services);
+        let total = Math.ceil(response?.data?.total / params.limit)
+        setCount(total);
         return response.data.services;
       }
     } catch (err) {
@@ -48,7 +56,7 @@ const Index = () => {
 
   useEffect(() => {
     getService();
-  }, []);
+  }, [params]);
 
   const [edit, setEdit] = useState({});
   const [open, setOpen] = useState(false);
@@ -68,7 +76,12 @@ const Index = () => {
     setEdit(row);
     setOpen(true);
   };
-
+  const handleChange = (event, value) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: value
+    }));
+  };
   return (
     <div>
       <div className="flex w-full justify-between items-center mb-6">
@@ -116,6 +129,7 @@ const Index = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination count={count} page={params.page} onChange={handleChange} />
     </div>
   );
 };

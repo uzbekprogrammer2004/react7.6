@@ -130,7 +130,7 @@
 
 // ================= TEGILMASIN =====================
 
-
+import Pagination from '@mui/material/Pagination';
 import AddOrder from "../../components/modal/order-modal";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -167,14 +167,21 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Index = () => {
   const [open, setOpen] = useState(false);
-  
+  const [count, setCount] = useState(0); 
+  const [params, setParams] = useState({
+    limit: 5,
+    page: 1
+  });
+
   const [data, setData] = useState([]);
   const getData = async () => {
     try {
-      const response = await order.get();
+      const response = await order.get(params);
       console.log(response?.data?.orders_list?.client_id);
       if (response.status === 200 && response?.data?.orders_list) {
         setData(response.data.orders_list);
+        let total = Math.ceil(response?.data?.total / params.limit)
+        setCount(total);
       }
       console.log(response);
     } catch (error) {
@@ -184,7 +191,7 @@ const Index = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [params]);
 
   const deleteItem = async (id) => {
     console.log(`Deleting item with id: ${id}`);
@@ -202,7 +209,12 @@ const Index = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const handleChange = (event, value) => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: value
+    }));
+  };
   return (
     <div>
       <div className="flex w-full justify-between items-center mb-6">
@@ -258,6 +270,7 @@ const Index = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination count={count} page={params.page} onChange={handleChange} />
     </div>
   );
 };
