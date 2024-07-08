@@ -9,8 +9,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button"; 
 import service from "../../service/service";
 import { useEffect, useState } from "react";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -32,13 +34,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const Index = () => {
   const [services, setServices] = useState([]);
-
   const getService = async () => {
     try {
-      const responce = await service.get();
-      setServices(responce.data.services);
-      if (responce.request === 200 && responce?.data?.service) {
-        return responce?.data?.services;
+      const response = await service.get();
+      if (response.status === 200 && response?.data?.services) {
+        setServices(response.data.services);
+        return response.data.services;
       }
     } catch (err) {
       console.log(err);
@@ -49,27 +50,33 @@ const Index = () => {
     getService();
   }, []);
 
-  const [edit, setEdit] = useState({})
-  const [open, setOpen] = useState (false)
-  const deleteItem =async(id)=> {
-    try{
-      const responce = await service.delete(id)
-      responce.status === 200 && window.location.reload()
-    }catch(error){
+  const [edit, setEdit] = useState({});
+  const [open, setOpen] = useState(false);
+
+  const deleteItem = async (id) => {
+    try {
+      const response = await service.delete(id);
+      if (response.status === 200) {
+        window.location.reload();
+      }
+    } catch (error) {
       console.log(error);
     }
-  }
-  
-  const editItem =(row)=>{
-    setEdit(row)
-    setOpen(true)
+  };
 
-  }
+  const editItem = (row) => {
+    setEdit(row);
+    setOpen(true);
+  };
+
   return (
     <div>
-        <div className="flex w-full justify-between items-center mb-6">
+      <div className="flex w-full justify-between items-center mb-6">
         <h1 className="text-2xl">Service</h1>
-        <AddService/>
+        <Button onClick={() => editItem({})} variant="contained">
+          Add Service
+        </Button>
+        <AddService row={edit} open={open} handleClose={() => setOpen(false)} />
       </div>
 
       <TableContainer component={Paper}>
@@ -86,22 +93,22 @@ const Index = () => {
           <TableBody>
             {services &&
               services.map((row, index) => (
-                <StyledTableRow key={row.name}>
+                <StyledTableRow key={row.id}>
                   <StyledTableCell>{index + 1}</StyledTableCell>
                   <StyledTableCell component="th" scope="row">
                     {row.name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                  {`${row.price} UZS`}
+                    {`${row.price} UZS`}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                  <button onClick={()=>editItem(row.id)}>
-                    <EditIcon color="error"/>
+                    <button onClick={() => editItem(row)}>
+                      <EditIcon color="error" />
                     </button>
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    <button onClick={()=>deleteItem(row.id)}>
-                    <DeleteIcon color="error"/>
+                    <button onClick={() => deleteItem(row.id)}>
+                      <DeleteIcon color="error" />
                     </button>
                   </StyledTableCell>
                 </StyledTableRow>
