@@ -10,10 +10,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button"; 
+import Button from "@mui/material/Button";
 import service from "../../service/service";
 import { useEffect, useState } from "react";
-
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
@@ -34,15 +35,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Index = () => {
-  const [count, setCount] = useState(0); 
+  const [count, setCount] = useState(0);
   const [params, setParams] = useState({
     limit: 3,
-    page: 1
+    page: 1,
   });
   const [services, setServices] = useState([]);
   const getService = async () => {
     try {
       const response = await service.get(params);
+      console.log(response);
       if (response.status === 200 && response?.data?.services) {
         setServices(response.data.services);
         let total = Math.ceil(response?.data?.total / params.limit)
@@ -82,15 +84,15 @@ const Index = () => {
       page: value
     }));
   };
+
   return (
     <div>
       <div className="flex w-full justify-between items-center mb-6">
         <h1 className="text-2xl">Service</h1>
         <Button onClick={() => editItem({})} variant="contained">
           Add Service
-        </Button>
-        <AddService row={edit} open={open} handleClose={() => setOpen(false)} />
-      </div>
+        </Button></div>
+      <AddService row={edit} open={open} handleClose={() => setOpen(false)} />
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
